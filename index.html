@@ -1536,8 +1536,14 @@ ad_plan_id	adx	first_ssp	bundle	tagid	optimal_adm_template_id	adm
                     let newBudget = null;
                     let dimensions = parts;
                     
-                    // 使用智能识别逻辑
-                    if (parts.length === 4) {
+                    // 当默认预算已填写时，所有列都当维度处理
+                    const hasDefaultCap = defaultCap !== "" && !isNaN(defaultCap);
+                    // 使用智能识别逻辑（当默认预算已填写时，所有列都当维度处理）
+                    if (hasDefaultCap) {
+                        // 默认预算已指定，所有列都作为维度
+                        dimensions = parts;
+                        newBudget = null;
+                    } else if (parts.length === 4) {
                         const lastPart = parts[3];
                         const isNumber = !isNaN(lastPart) && lastPart.trim() !== '';
                         const isNotThousandMultiple = isNumber && (parseFloat(lastPart) % 1000 !== 0);
@@ -1694,6 +1700,8 @@ ad_plan_id	adx	first_ssp	bundle	tagid	optimal_adm_template_id	adm
                     
                     let dimensions = parts;
                     
+                    // 当默认预算已填写时，所有列都当维度处理
+                    const hasDefaultCap = defaultCap !== "" && !isNaN(defaultCap);
                     // 使用智能识别逻辑，但删除模式下不考虑预算值
                     if (parts.length === 4) {
                         const lastPart = parts[3];
