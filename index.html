@@ -230,9 +230,12 @@
             <nav class="nav-menu">
                 <button class="nav-item active" onclick="switchTool('', this)">🏠 首页</button>
                 <button class="nav-item" onclick="switchTool('adm-converter', this)">📱 ADM转换器</button>
+                <button class="nav-item" onclick="switchTool('timestamp', this)">⏰ 时间戳转换</button>
+                <button class="nav-item" onclick="switchTool('url-encoder', this)">🔗 URL编解码</button>
+                <button class="nav-item" onclick="switchTool('bid-parser', this)">🎯 Bid识别</button>
+                <button class="nav-item" onclick="switchTool('budget-generator', this)">💰 预算生成</button>
+                <button class="nav-item" onclick="switchTool('sql-generator', this)">🔧 快速SQL生成</button>
                 <button class="nav-item" disabled>📋 JSON格式化</button>
-                <button class="nav-item" disabled>🔗 URL编解码</button>
-                <button class="nav-item" disabled>⏰ 时间戳转换</button>
                 <button class="nav-item" disabled>🔍 正则测试器</button>
                 <button class="nav-item" disabled>🎨 颜色工具</button>
             </nav>
@@ -245,8 +248,8 @@
             <div class="welcome">
                 <h2>欢迎使用开发者工具集</h2>
                 <p>请从顶部菜单栏选择需要使用的工具</p>
-                <p>✅ 已完成：ADM转换器</p>
-                <p>🚧 开发中：JSON格式化、URL编解码、时间戳转换等</p>
+                <p>✅ 已完成：ADM转换器、时间戳转换、URL编解码、Bid识别、预算生成、快速SQL生成</p>
+                <p>🚧 开发中：JSON格式化、正则测试器、颜色工具等</p>
             </div>
         </div>
 
@@ -293,6 +296,444 @@
                     
                     <label>预览效果:</label>
                     <iframe id="previewFrame" class="preview-frame" src="about:blank"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- 时间戳转换器 -->
+        <div id="timestamp" class="tool-content">
+            <div class="tool-header">
+                <h2>⏰ 时间戳转换器</h2>
+                <p>Unix时间戳与日期时间相互转换 (UTC+8时区)</p>
+            </div>
+            
+            <div class="tool-body">
+                <div class="input-section">
+                    <label for="timestampInput">时间戳转日期时间:</label>
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <input type="text" id="timestampInput" placeholder="输入Unix时间戳 (秒)" style="flex: 1; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px;">
+                        <button class="btn-primary" onclick="timestampToDate()">转换为日期</button>
+                        <button class="btn-secondary" onclick="setCurrentTimestamp()">当前时间</button>
+                    </div>
+                    <div id="timestampResult" style="padding: 10px; background: #f8f9fa; border-radius: 6px; font-family: monospace;"></div>
+                </div>
+                
+                <div class="input-section">
+                    <label>日期时间转时间戳:</label>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 10px;">
+                        <input type="number" id="year" placeholder="年" min="1970" max="2100" style="padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px;">
+                        <input type="number" id="month" placeholder="月" min="1" max="12" style="padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px;">
+                        <input type="number" id="day" placeholder="日" min="1" max="31" style="padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px;">
+                        <input type="number" id="hour" placeholder="时" min="0" max="23" value="0" style="padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px;">
+                        <input type="number" id="minute" placeholder="分" min="0" max="59" value="0" style="padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px;">
+                        <input type="number" id="second" placeholder="秒" min="0" max="59" value="0" style="padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px;">
+                    </div>
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="dateToTimestamp()">转换为时间戳</button>
+                        <button class="btn-secondary" onclick="setCurrentDate()">当前时间</button>
+                        <button class="btn-secondary" onclick="clearDateTime()">清空</button>
+                    </div>
+                    <div id="dateResult" style="padding: 10px; background: #f8f9fa; border-radius: 6px; font-family: monospace;"></div>
+                </div>
+                
+                <div id="timestampMessage"></div>
+            </div>
+        </div>
+
+        <!-- URL编解码工具 -->
+        <div id="url-encoder" class="tool-content">
+            <div class="tool-header">
+                <h2>🔗 URL编解码工具</h2>
+                <p>URL编码解码、Base64编解码等常用编码转换</p>
+            </div>
+            
+            <div class="tool-body">
+                <div class="input-section">
+                    <label for="urlInput">URL编解码:</label>
+                    <textarea id="urlInput" placeholder="输入需要编码或解码的URL内容...
+例如：
+编码前：https://example.com/search?q=测试 参数&type=1
+编码后：https://example.com/search?q=%E6%B5%8B%E8%AF%95%20%E5%8F%82%E6%95%B0&type=1"></textarea>
+                    
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="encodeUrl()">URL编码</button>
+                        <button class="btn-primary" onclick="decodeUrl()">URL解码</button>
+                        <button class="btn-secondary" onclick="clearUrl()">清空</button>
+                    </div>
+                    
+                    <label>结果:</label>
+                    <textarea id="urlOutput" readonly placeholder="编码/解码结果将显示在这里..."></textarea>
+                </div>
+                
+                <div class="input-section">
+                    <label for="base64Input">Base64编解码:</label>
+                    <textarea id="base64Input" placeholder="输入需要编码或解码的Base64内容...
+例如：
+编码前：Hello World 你好世界
+编码后：SGVsbG8gV29ybGQg5L2g5aW95LiW55WM"></textarea>
+                    
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="encodeBase64()">Base64编码</button>
+                        <button class="btn-primary" onclick="decodeBase64()">Base64解码</button>
+                        <button class="btn-secondary" onclick="clearBase64()">清空</button>
+                    </div>
+                    
+                    <label>结果:</label>
+                    <textarea id="base64Output" readonly placeholder="编码/解码结果将显示在这里..."></textarea>
+                </div>
+                
+                <div id="urlMessage"></div>
+            </div>
+        </div>
+
+        <!-- Bid识别工具 -->
+        <div id="bid-parser" class="tool-content">
+            <div class="tool-header">
+                <h2>🎯 Bid识别工具</h2>
+                <p>解析Bid Request/Response，转义JSON并格式化显示</p>
+            </div>
+            
+            <div class="tool-body">
+                <div class="input-section">
+                    <label for="bidInput">输入Bid Request/Response:</label>
+                    <textarea id="bidInput" placeholder='粘贴转义的Bid Request或Response JSON:
+
+例如：
+{"id":"eb566b92-519d-47cf-a6f6-fbee7b2f0e6d","bidid":"691bdd0f7d641500018d136e",...}
+
+支持转义格式，工具会自动识别并解析'></textarea>
+                    
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="parseBid()">解析Bid</button>
+                        <button class="btn-secondary" onclick="clearBid()">清空</button>
+                    </div>
+                    
+                    <div id="bidMessage"></div>
+                </div>
+                
+                <div class="output-section">
+                    <label>解析结果:</label>
+                    <div id="bidAnalysis" style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 20px;"></div>
+                    
+                    <label>格式化JSON:</label>
+                    <textarea id="bidOutput" readonly placeholder="格式化后的JSON将显示在这里..."></textarea>
+                    
+                    <div class="button-group">
+                        <button class="btn-success" onclick="copyBidJson()">复制JSON</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 细粒度预算生成工具 -->
+        <div id="budget-generator" class="tool-content">
+            <div class="tool-header">
+                <h2>💰 细粒度预算调整工具</h2>
+                <p>调整和生成细粒度预算配置，支持批量更新</p>
+            </div>
+            
+            <div class="tool-body">
+                <div class="input-section">
+                    <label for="currentBudgetInput">当前预算配置 (可选):</label>
+                    <textarea id="currentBudgetInput" placeholder='输入当前的预算配置，每行一个，格式：
+adx#first_ssp#bundle#placement:预算值
+adx#first_ssp#bundle#:预算值
+
+例如：
+flatads#chartboost.com#com.vitastudio.mahjong#0d9d8f05-c123-42d9-a1b3-f83a6354217b:100
+flatads#chartboost.com#com.vitastudio.mahjong#:50
+topon#mintegral.com#com.shopee.ph#banner:200
+
+注意：更新预算模式下此项为可选，为空时将创建全新的预算配置'></textarea>
+                    
+                    <label>操作模式:</label>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: inline-flex; align-items: center; margin-right: 20px; font-weight: normal;">
+                            <input type="radio" name="operationMode" value="update" checked style="margin-right: 8px;">
+                            更新预算
+                        </label>
+                        <label style="display: inline-flex; align-items: center; margin-right: 20px; font-weight: normal;">
+                            <input type="radio" name="operationMode" value="add-only" style="margin-right: 8px;">
+                            仅新增预算
+                        </label>
+                        <label style="display: inline-flex; align-items: center; margin-right: 20px; font-weight: normal;">
+                            <input type="radio" name="operationMode" value="add-and-override-zero" style="margin-right: 8px;">
+                            新增预算&覆盖当前为0的
+                        </label>
+                        <label style="display: inline-flex; align-items: center; font-weight: normal;">
+                            <input type="radio" name="operationMode" value="delete" style="margin-right: 8px;">
+                            删除预算
+                        </label>
+                    </div>
+                    
+                    <div id="updateMode">
+                        <label for="updateRulesInput">更新规则 (可以从excel直接复制):</label>
+                        <textarea id="updateRulesInput" placeholder='输入需要更新的组合，每行一个，格式：
+adx	first_ssp	bundle	placement	[预算值]
+adx	first_ssp	bundle	[预算值]
+
+例如：
+flatads	chartboost.com	com.vitastudio.mahjong	0d9d8f05-c123-42d9-a1b3-f83a6354217b	200
+flatads	chartboost.com	com.vitastudio.mahjong
+topon	mintegral.com	wp.wattpad	4621502
+topon	mintegral.com	com.shopee.ph	banner	1000
+
+注意：4个输入项时，如果最后一位是数字但不是1000的倍数，将按adx+first_ssp+bundle+placement模式处理'></textarea>
+                        
+                        <label for="defaultCapInput">默认预算 (当更新规则中没有指定预算时使用):</label>
+                        <input type="number" id="defaultCapInput" placeholder="输入默认预算数值，例如：100" min="0" step="0.01" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; margin-bottom: 20px;">
+                    </div>
+                    
+                    <div id="deleteMode" style="display: none;">
+                        <label for="deleteRulesInput">删除规则 (可以从excel直接复制):</label>
+                        <textarea id="deleteRulesInput" placeholder='输入需要删除的组合，每行一个，格式：
+adx	first_ssp	bundle	placement
+adx	first_ssp	bundle
+
+例如：
+flatads	chartboost.com	com.vitastudio.mahjong	0d9d8f05-c123-42d9-a1b3-f83a6354217b
+flatads	chartboost.com	com.vitastudio.mahjong
+topon	mintegral.com	wp.wattpad	4621502
+
+注意：支持4个输入项的智能识别（参考更新规则模式）'></textarea>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="adjustBudget()">调整预算</button>
+                        <button class="btn-secondary" onclick="clearAdjustment()">清空</button>
+                    </div>
+                    
+                    <div id="budgetMessage"></div>
+                </div>
+                
+                <div class="output-section">
+                    <label>调整结果:</label>
+                    <textarea id="budgetOutput" readonly placeholder="调整后的预算配置将显示在这里..."></textarea>
+                    
+                    <div class="button-group">
+                        <button class="btn-success" onclick="copyBudgetResult()">复制结果</button>
+                        <button class="btn-secondary" onclick="downloadBudgetFile()">下载文件</button>
+                    </div>
+                    
+                    <div id="budgetPreview" style="background: #f8f9fa; border-radius: 8px; padding: 15px; margin-top: 20px; display: none;">
+                        <h4 style="color: #2c3e50; margin-bottom: 10px;">📈 调整统计</h4>
+                        <div id="budgetStats"></div>
+                    </div>
+                    
+                    <div id="budgetDetails" style="background: #f8f9fa; border-radius: 8px; padding: 15px; margin-top: 20px; display: none;">
+                        <h4 style="color: #2c3e50; margin-bottom: 10px;">📋 操作详情</h4>
+                        <div id="budgetDetailsContent"></div>
+                    </div>
+                </div>
+                
+                <!-- 预算与impression对比模块 -->
+                <div class="input-section" style="border-top: 2px solid #e0e0e0; padding-top: 30px; margin-top: 30px;">
+                    <h3 style="color: #2c3e50; margin-bottom: 20px;">📊 预算与Impression对比</h3>
+                    
+                    <label for="budgetCapInput">当前预算配置 (Impression Cap):</label>
+                    <textarea id="budgetCapInput" placeholder='输入当前的预算配置，每行一个，格式：
+adx#first_ssp#bundle#placement:impression_cap
+adx#first_ssp#bundle#:impression_cap
+
+例如：
+flatads#chartboost.com#com.vitastudio.mahjong#0d9d8f05-c123-42d9-a1b3-f83a6354217b:1000
+flatads#chartboost.com#com.vitastudio.mahjong#:500
+topon#mintegral.com#com.shopee.ph#banner:2000'></textarea>
+                    
+                    <label for="yesterdayImpInput">昨天实际Impression数据 (可以从excel直接复制):</label>
+                    <textarea id="yesterdayImpInput" placeholder='输入昨天的impression数据，每行一个，格式：
+adx	first_ssp	bundle	placement	impression_count
+adx	first_ssp	bundle	impression_count
+
+例如：
+flatads	chartboost.com	com.vitastudio.mahjong	0d9d8f05-c123-42d9-a1b3-f83a6354217b	800
+flatads	chartboost.com	com.vitastudio.mahjong	600
+topon	mintegral.com	com.shopee.ph	banner	2500
+
+注意：支持4个输入项的智能识别（参考更新规则模式）'></textarea>
+                    
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="compareImpressions()">对比分析</button>
+                        <button class="btn-secondary" onclick="clearComparison()">清空对比</button>
+                    </div>
+                    
+                    <div id="comparisonMessage"></div>
+                    
+                    <div id="comparisonResults" style="margin-top: 20px; display: none;">
+                        <label>对比结果:</label>
+                        <div id="comparisonTable" style="background: white; border-radius: 8px; padding: 20px; margin-top: 10px; overflow-x: auto;"></div>
+                        
+                        <div class="button-group" style="margin-top: 15px;">
+                            <button class="btn-success" onclick="exportComparisonCSV()">导出CSV</button>
+                        </div>
+                        
+                        <div id="comparisonSummary" style="background: #f8f9fa; border-radius: 8px; padding: 15px; margin-top: 20px;">
+                            <h4 style="color: #2c3e50; margin-bottom: 10px;">📈 对比统计</h4>
+                            <div id="comparisonStats"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 快速SQL生成工具 -->
+        <div id="sql-generator" class="tool-content">
+            <div class="tool-header">
+                <h2>🔧 快速SQL生成工具</h2>
+                <p>根据不同类型快速生成SQL语句</p>
+            </div>
+            
+            <div class="tool-body">
+                <div class="input-section">
+                    <label>SQL类型:</label>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: inline-flex; align-items: center; margin-right: 20px; font-weight: normal;">
+                            <input type="radio" name="sqlType" value="block-placement" checked style="margin-right: 8px;">
+                            细粒度掐停SQL
+                        </label>
+                        <label style="display: inline-flex; align-items: center; margin-right: 20px; font-weight: normal;">
+                            <input type="radio" name="sqlType" value="quick-concat" style="margin-right: 8px;">
+                            细粒度快速拼接
+                        </label>
+                        <label style="display: inline-flex; align-items: center; margin-right: 20px; font-weight: normal;">
+                            <input type="radio" name="sqlType" value="use-explore-data" style="margin-right: 8px;">
+                            use_explore_data模式
+                        </label>
+                        <label style="display: inline-flex; align-items: center; margin-right: 20px; font-weight: normal;">
+                            <input type="radio" name="sqlType" value="use-explore-data-full" style="margin-right: 8px;">
+                            use_explore_data_full模式
+                        </label>
+                        <label style="display: inline-flex; align-items: center; margin-right: 20px; font-weight: normal;">
+                            <input type="radio" name="sqlType" value="adm-config-8020" style="margin-right: 8px;">
+                            adm配置(80%最佳&20%通投)
+                        </label>
+                    </div>
+                    
+                    <div id="blockPlacementMode">
+                        <label for="blockPlacementInput">输入数据 (可以从Excel直接复制):</label>
+                        <textarea id="blockPlacementInput" placeholder='输入数据，每行一个，格式：
+ad_plan_id	adx	first_ssp	bundle	placement
+
+例如：
+1	adx1	ssp1	bundle1	placement1
+2	adx2	ssp2	bundle2	placement2
+3	adx3	ssp3	bundle3	placement3
+
+支持从Excel直接复制粘贴'></textarea>
+                    </div>
+                    
+                    <div id="quickConcatMode" style="display: none;">
+                        <label for="quickConcatInput">输入数据 (可以从Excel直接复制):</label>
+                        <textarea id="quickConcatInput" placeholder='输入数据，每行一个，同一行内的空格都会被替换为#
+
+例如：
+adx1 ssp1 bundle1 placement1
+adx2 ssp2 bundle2 placement2
+或者：
+adx1	ssp1	bundle1	placement1
+adx2	ssp2	bundle2	placement2
+
+支持从Excel直接复制粘贴，生成IN()括号内的内容，每行为一个字符串，所有空格自动替换为#'></textarea>
+                    </div>
+                    
+                    <div id="useExploreDataMode" style="display: none;">
+                        <label for="existingDataInput">已存在的组合 (用于排重，可选):</label>
+                        <textarea id="existingDataInput" placeholder='输入已存在的组合，每行一个，格式：
+ad_plan_id	adx	first_ssp	bundle	tagid
+
+例如：
+1001	adx1	ssp1	com.example.app1	tag1
+1002	adx2	ssp2	com.example.app2	tag2
+
+留空则不进行排重'></textarea>
+                        
+                        <label for="useExploreDataInput">输入维护信息 (可以从Excel直接复制):</label>
+                        <textarea id="useExploreDataInput" placeholder='输入数据，每行一个，格式：
+ad_plan_id	adx	first_ssp	bundle	tagid
+
+例如：
+1001	adx1	ssp1	com.example.app1	tag1
+1002	adx2	ssp2	com.example.app2	tag2
+1003	adx3	ssp3	com.example.app3	tag3
+
+支持从Excel直接复制粘贴'></textarea>
+                        
+                        <label for="admTemplateIdsInput">ADM Template IDs (逗号分隔):</label>
+                        <input type="text" id="admTemplateIdsInput" placeholder="例如：101,102,103" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; margin-bottom: 20px;">
+                        
+                        <label for="attrInput">Attr值:</label>
+                        <input type="text" id="attrInput" placeholder="例如：attr1" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; margin-bottom: 20px;">
+                    </div>
+                    
+                    <div id="useExploreDataFullMode" style="display: none;">
+                        <label for="existingDataFullInput">已存在的组合 (用于排重，可选):</label>
+                        <textarea id="existingDataFullInput" placeholder='输入已存在的组合，每行一个，格式：
+ad_plan_id	adx	first_ssp	bundle	tagid
+
+例如：
+1001	adx1	ssp1	com.example.app1	tag1
+1002	adx2	ssp2	com.example.app2	tag2
+
+留空则不进行排重'></textarea>
+                        
+                        <label for="useExploreDataFullInput">输入维护信息 (可以从Excel直接复制):</label>
+                        <textarea id="useExploreDataFullInput" placeholder='输入数据，每行一个，格式：
+ad_plan_id	adx	first_ssp	bundle	tagid	adm
+
+例如：
+1001	adx1	ssp1	com.example.app1	tag1	adm_content1
+1002	adx2	ssp2	com.example.app2	tag2	adm_content2
+1003	adx3	ssp3	com.example.app3	tag3	adm_content3
+
+支持从Excel直接复制粘贴'></textarea>
+                        
+                        <label for="attrFullInput">Attr值:</label>
+                        <input type="text" id="attrFullInput" placeholder="例如：attr1" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; margin-bottom: 20px;">
+                    </div>
+                    
+                    <div id="admConfig8020Mode" style="display: none;">
+                        <label for="existingDataAdmConfigInput">已存在的组合 (用于排重，可选):</label>
+                        <textarea id="existingDataAdmConfigInput" placeholder='输入已存在的组合，每行一个，格式：
+ad_plan_id	adx	first_ssp	bundle	tagid
+
+例如：
+1001	adx1	ssp1	com.example.app1	tag1
+1002	adx2	ssp2	com.example.app2	tag2
+
+留空则不进行排重'></textarea>
+                        
+                        <label for="admConfig8020Input">输入维护信息 (可以从Excel直接复制):</label>
+                        <textarea id="admConfig8020Input" placeholder='输入数据，每行一个，格式：
+ad_plan_id	adx	first_ssp	bundle	tagid	optimal_adm_template_id	adm
+
+例如：
+1001	adx1	ssp1	com.example.app1	tag1	101	adm_content1
+1002	adx2	ssp2	com.example.app2	tag2	102	adm_content2
+1003	adx3	ssp3	com.example.app3	tag3	103	adm_content3
+
+支持从Excel直接复制粘贴'></textarea>
+                        
+                        <label for="attrAdmConfigInput">Attr值:</label>
+                        <input type="text" id="attrAdmConfigInput" placeholder="例如：attr1" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; margin-bottom: 20px;">
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="generateSQL()">生成SQL</button>
+                        <button class="btn-secondary" onclick="clearSQLGenerator()">清空</button>
+                    </div>
+                    
+                    <div id="sqlMessage"></div>
+                </div>
+                
+                <div class="output-section">
+                    <label>生成的SQL:</label>
+                    <textarea id="sqlOutput" readonly placeholder="生成的SQL语句将显示在这里..."></textarea>
+                    
+                    <div class="button-group">
+                        <button class="btn-success" onclick="copySQLResult()">复制SQL</button>
+                        <button class="btn-secondary" onclick="downloadSQLFile()">下载文件</button>
+                        <div id="segmentDownloads" style="display: none; margin-top: 10px;"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -461,6 +902,2097 @@
             document.getElementById('htmlOutput').value = '';
             document.getElementById('previewFrame').src = 'about:blank';
             document.getElementById('message').innerHTML = '';
+        }
+
+        function clearUrl() {
+            document.getElementById('urlInput').value = '';
+            document.getElementById('urlOutput').value = '';
+        }
+
+        function clearBase64() {
+            document.getElementById('base64Input').value = '';
+            document.getElementById('base64Output').value = '';
+        }
+
+        function clearBid() {
+            document.getElementById('bidInput').value = '';
+            document.getElementById('bidOutput').value = '';
+            document.getElementById('bidAnalysis').innerHTML = '';
+        }
+
+        // 优化消息显示 - 统一函数减少重复代码
+        function showMessage(text, type = 'error', elementId = 'message') {
+            const messageDiv = document.getElementById(elementId);
+            messageDiv.innerHTML = `<div class="${type}">${text}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        function showTimestampMessage(text, type = 'error') {
+            showMessage(text, type, 'timestampMessage');
+        }
+
+        function showUrlMessage(text, type = 'error') {
+            showMessage(text, type, 'urlMessage');
+        }
+
+        function showBidMessage(text, type = 'error') {
+            showMessage(text, type, 'bidMessage');
+        }
+
+        function showBudgetMessage(text, type = 'error') {
+            showMessage(text, type, 'budgetMessage');
+        }
+
+        function showComparisonMessage(text, type = 'error') {
+            showMessage(text, type, 'comparisonMessage');
+        }
+
+        function showSQLMessage(text, type = 'error') {
+            showMessage(text, type, 'sqlMessage');
+        }
+
+        function timestampToDate() {
+            const timestamp = document.getElementById('timestampInput').value.trim();
+            
+            if (!timestamp) {
+                showTimestampMessage('请输入时间戳');
+                return;
+            }
+            
+            try {
+                // 支持秒和毫秒时间戳
+                let ts = parseInt(timestamp);
+                if (timestamp.length === 10) {
+                    ts = ts * 1000; // 秒转毫秒
+                }
+                
+                // 创建UTC+8时间
+                const date = new Date(ts);
+                const utc8Date = new Date(date.getTime() + (8 * 60 * 60 * 1000));
+                
+                const result = `
+                    <strong>UTC+8时间:</strong><br>
+                    ${utc8Date.getFullYear()}年${(utc8Date.getMonth()+1).toString().padStart(2,'0')}月${utc8Date.getDate().toString().padStart(2,'0')}日 ${utc8Date.getHours().toString().padStart(2,'0')}:${utc8Date.getMinutes().toString().padStart(2,'0')}:${utc8Date.getSeconds().toString().padStart(2,'0')}<br>
+                    <strong>格式化:</strong> ${utc8Date.getFullYear()}-${(utc8Date.getMonth()+1).toString().padStart(2,'0')}-${utc8Date.getDate().toString().padStart(2,'0')} ${utc8Date.getHours().toString().padStart(2,'0')}:${utc8Date.getMinutes().toString().padStart(2,'0')}:${utc8Date.getSeconds().toString().padStart(2,'0')}<br>
+                    <strong>星期:</strong> ${['日','一','二','三','四','五','六'][utc8Date.getDay()]}
+                `;
+                
+                document.getElementById('timestampResult').innerHTML = result;
+                showTimestampMessage('转换成功！', 'success');
+                
+            } catch (error) {
+                showTimestampMessage('时间戳格式错误');
+            }
+        }
+
+        function dateToTimestamp() {
+            const year = document.getElementById('year').value;
+            const month = document.getElementById('month').value;
+            const day = document.getElementById('day').value;
+            const hour = document.getElementById('hour').value || 0;
+            const minute = document.getElementById('minute').value || 0;
+            const second = document.getElementById('second').value || 0;
+            
+            if (!year || !month || !day) {
+                showTimestampMessage('请至少输入年月日');
+                return;
+            }
+            
+            try {
+                // 创建UTC+8时间，需要减去8小时偏移
+                const date = new Date(year, month - 1, day, hour, minute, second);
+                const utc8Timestamp = date.getTime() - (8 * 60 * 60 * 1000);
+                const timestampSeconds = Math.floor(utc8Timestamp / 1000);
+                
+                const result = `
+                    <strong>时间戳 (秒):</strong> ${timestampSeconds}<br>
+                    <strong>时间戳 (毫秒):</strong> ${utc8Timestamp}<br>
+                    <strong>输入时间:</strong> ${year}-${month.toString().padStart(2,'0')}-${day.toString().padStart(2,'0')} ${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}:${second.toString().padStart(2,'0')} (UTC+8)
+                `;
+                
+                document.getElementById('dateResult').innerHTML = result;
+                showTimestampMessage('转换成功！', 'success');
+                
+            } catch (error) {
+                showTimestampMessage('日期格式错误');
+            }
+        }
+
+        function setCurrentTimestamp() {
+            const now = Math.floor(Date.now() / 1000);
+            document.getElementById('timestampInput').value = now;
+            timestampToDate();
+        }
+
+        function setCurrentDate() {
+            const now = new Date();
+            // 转换为UTC+8
+            const utc8Date = new Date(now.getTime() + (8 * 60 * 60 * 1000));
+            
+            document.getElementById('year').value = utc8Date.getFullYear();
+            document.getElementById('month').value = utc8Date.getMonth() + 1;
+            document.getElementById('day').value = utc8Date.getDate();
+            document.getElementById('hour').value = utc8Date.getHours();
+            document.getElementById('minute').value = utc8Date.getMinutes();
+            document.getElementById('second').value = utc8Date.getSeconds();
+            
+            dateToTimestamp();
+        }
+
+        function clearDateTime() {
+            document.getElementById('year').value = '';
+            document.getElementById('month').value = '';
+            document.getElementById('day').value = '';
+            document.getElementById('hour').value = '0';
+            document.getElementById('minute').value = '0';
+            document.getElementById('second').value = '0';
+            document.getElementById('dateResult').innerHTML = '';
+        }
+
+        // 页面加载时设置默认日期为今天
+        window.addEventListener('load', function() {
+            const now = new Date();
+            const utc8Date = new Date(now.getTime() + (8 * 60 * 60 * 1000));
+            
+            document.getElementById('year').value = utc8Date.getFullYear();
+            document.getElementById('month').value = utc8Date.getMonth() + 1;
+            document.getElementById('day').value = utc8Date.getDate();
+        });
+
+        // URL编解码工具相关函数
+        function showUrlMessage(text, type = 'error') {
+            const messageDiv = document.getElementById('urlMessage');
+            messageDiv.innerHTML = `<div class="${type}">${text}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        function encodeUrl() {
+            const input = document.getElementById('urlInput').value;
+            
+            if (!input.trim()) {
+                showUrlMessage('请输入需要编码的内容');
+                return;
+            }
+            
+            try {
+                const encoded = encodeURIComponent(input);
+                document.getElementById('urlOutput').value = encoded;
+                showUrlMessage('URL编码成功！', 'success');
+            } catch (error) {
+                showUrlMessage('编码失败: ' + error.message);
+            }
+        }
+
+        function decodeUrl() {
+            const input = document.getElementById('urlInput').value;
+            
+            if (!input.trim()) {
+                showUrlMessage('请输入需要解码的内容');
+                return;
+            }
+            
+            try {
+                const decoded = decodeURIComponent(input);
+                document.getElementById('urlOutput').value = decoded;
+                showUrlMessage('URL解码成功！', 'success');
+            } catch (error) {
+                showUrlMessage('解码失败，请检查输入格式');
+            }
+        }
+
+        function clearUrl() {
+            document.getElementById('urlInput').value = '';
+            document.getElementById('urlOutput').value = '';
+        }
+
+        function encodeBase64() {
+            const input = document.getElementById('base64Input').value;
+            
+            if (!input.trim()) {
+                showUrlMessage('请输入需要编码的内容');
+                return;
+            }
+            
+            try {
+                const encoded = btoa(unescape(encodeURIComponent(input)));
+                document.getElementById('base64Output').value = encoded;
+                showUrlMessage('Base64编码成功！', 'success');
+            } catch (error) {
+                showUrlMessage('编码失败: ' + error.message);
+            }
+        }
+
+        function decodeBase64() {
+            const input = document.getElementById('base64Input').value;
+            
+            if (!input.trim()) {
+                showUrlMessage('请输入需要解码的内容');
+                return;
+            }
+            
+            try {
+                const decoded = decodeURIComponent(escape(atob(input)));
+                document.getElementById('base64Output').value = decoded;
+                showUrlMessage('Base64解码成功！', 'success');
+            } catch (error) {
+                showUrlMessage('解码失败，请检查Base64格式');
+            }
+        }
+
+        function clearBase64() {
+            document.getElementById('base64Input').value = '';
+            document.getElementById('base64Output').value = '';
+        }
+
+        // Bid识别工具相关函数
+        function showBidMessage(text, type = 'error') {
+            const messageDiv = document.getElementById('bidMessage');
+            messageDiv.innerHTML = `<div class="${type}">${text}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        function parseBid() {
+            const input = document.getElementById('bidInput').value.trim();
+            
+            if (!input) {
+                showBidMessage('请输入Bid Request或Response内容');
+                return;
+            }
+            
+            try {
+                let jsonStr = input;
+                
+                // 处理转义JSON
+                if (input.startsWith('{\\') || input.startsWith('[\\')) {
+                    jsonStr = '"' + input + '"';
+                    const unescapedStr = JSON.parse(jsonStr);
+                    jsonStr = JSON.parse(unescapedStr);
+                } else {
+                    jsonStr = JSON.parse(input);
+                }
+                
+                // 格式化JSON
+                const formatted = JSON.stringify(jsonStr, null, 2);
+                document.getElementById('bidOutput').value = formatted;
+                
+                // 分析Bid结构
+                analyzeBid(jsonStr);
+                
+                showBidMessage('Bid解析成功！', 'success');
+                
+            } catch (error) {
+                showBidMessage('解析失败，请检查JSON格式: ' + error.message);
+            }
+        }
+
+        function analyzeBid(bidData) {
+            const analysisDiv = document.getElementById('bidAnalysis');
+            let html = '';
+            
+            // 判断是Request还是Response
+            const isResponse = bidData.seatbid || bidData.bidid;
+            const isRequest = bidData.imp || bidData.site || bidData.app;
+            
+            html += `<h3 style="color: #2c3e50; margin-bottom: 15px;">📊 Bid ${isResponse ? 'Response' : isRequest ? 'Request' : '数据'} 分析</h3>`;
+            
+            // 基本信息
+            html += '<div style="margin-bottom: 20px;">';
+            html += '<h4 style="color: #34495e; margin-bottom: 10px;">🔍 基本信息</h4>';
+            html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">';
+            
+            if (bidData.id) html += `<div><strong>ID:</strong> ${bidData.id}</div>`;
+            if (bidData.bidid) html += `<div><strong>Bid ID:</strong> ${bidData.bidid}</div>`;
+            if (bidData.cur) html += `<div><strong>货币:</strong> ${bidData.cur}</div>`;
+            if (bidData.tmax) html += `<div><strong>超时:</strong> ${bidData.tmax}ms</div>`;
+            
+            html += '</div></div>';
+            
+            // Response特有信息
+            if (isResponse && bidData.seatbid) {
+                html += '<div style="margin-bottom: 20px;">';
+                html += '<h4 style="color: #34495e; margin-bottom: 10px;">💰 竞价信息</h4>';
+                
+                bidData.seatbid.forEach((seat, index) => {
+                    html += `<div style="border: 1px solid #ddd; padding: 15px; border-radius: 6px; margin-bottom: 10px;">`;
+                    html += `<h5 style="color: #2980b9;">Seat: ${seat.seat || 'N/A'}</h5>`;
+                    
+                    if (seat.bid) {
+                        seat.bid.forEach((bid, bidIndex) => {
+                            html += `<div style="margin-left: 20px; margin-top: 10px;">`;
+                            html += `<strong>Bid ${bidIndex + 1}:</strong><br>`;
+                            html += `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 5px;">`;
+                            
+                            if (bid.price) html += `<div><strong>价格:</strong> $${bid.price.toFixed(4)}</div>`;
+                            if (bid.impid) html += `<div><strong>Imp ID:</strong> ${bid.impid}</div>`;
+                            if (bid.crid) html += `<div><strong>创意ID:</strong> ${bid.crid}</div>`;
+                            if (bid.w && bid.h) html += `<div><strong>尺寸:</strong> ${bid.w}x${bid.h}</div>`;
+                            if (bid.adomain) html += `<div><strong>广告域:</strong> ${bid.adomain.join(', ')}</div>`;
+                            if (bid.bundle) html += `<div><strong>Bundle:</strong> ${bid.bundle}</div>`;
+                            
+                            html += `</div>`;
+                            
+                            // ADM预览
+                            if (bid.adm) {
+                                html += `<div style="margin-top: 10px;">`;
+                                html += `<strong>ADM:</strong> <span style="color: #27ae60;">包含广告内容</span>`;
+                                html += `</div>`;
+                            }
+                            
+                            html += `</div>`;
+                        });
+                    }
+                    html += `</div>`;
+                });
+                html += '</div>';
+            }
+            
+            // Request特有信息
+            if (isRequest) {
+                if (bidData.imp) {
+                    html += '<div style="margin-bottom: 20px;">';
+                    html += '<h4 style="color: #34495e; margin-bottom: 10px;">📱 广告位信息</h4>';
+                    
+                    bidData.imp.forEach((imp, index) => {
+                        html += `<div style="border: 1px solid #ddd; padding: 15px; border-radius: 6px; margin-bottom: 10px;">`;
+                        html += `<h5 style="color: #2980b9;">Impression ${index + 1}</h5>`;
+                        html += `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px;">`;
+                        
+                        if (imp.id) html += `<div><strong>ID:</strong> ${imp.id}</div>`;
+                        if (imp.bidfloor) html += `<div><strong>底价:</strong> $${imp.bidfloor}</div>`;
+                        if (imp.banner) {
+                            const banner = imp.banner;
+                            if (banner.w && banner.h) html += `<div><strong>Banner:</strong> ${banner.w}x${banner.h}</div>`;
+                        }
+                        if (imp.video) html += `<div><strong>类型:</strong> Video</div>`;
+                        if (imp.native) html += `<div><strong>类型:</strong> Native</div>`;
+                        
+                        html += `</div>`;
+                        
+                        // 拦截规则
+                        if (imp.badv || imp.bcat || imp.battr) {
+                            html += `<div style="margin-top: 15px; padding: 10px; background: #fff3cd; border-radius: 4px;">`;
+                            html += `<h6 style="color: #856404; margin-bottom: 8px;">🚫 拦截规则</h6>`;
+                            
+                            if (imp.badv && imp.badv.length > 0) {
+                                html += `<div style="margin-bottom: 8px;"><strong>拦截广告主域名:</strong><br>`;
+                                html += `<span style="font-family: monospace; color: #dc3545;">${imp.badv.join(', ')}</span></div>`;
+                            }
+                            
+                            if (imp.bcat && imp.bcat.length > 0) {
+                                html += `<div style="margin-bottom: 8px;"><strong>拦截广告类别:</strong><br>`;
+                                imp.bcat.forEach(cat => {
+                                    const catName = getCategoryName(cat);
+                                    html += `<span style="display: inline-block; margin: 2px 5px 2px 0; padding: 2px 8px; background: #dc3545; color: white; border-radius: 12px; font-size: 12px;">${cat} - ${catName}</span>`;
+                                });
+                                html += `</div>`;
+                            }
+                            
+                            if (imp.battr && imp.battr.length > 0) {
+                                html += `<div><strong>拦截广告属性:</strong><br>`;
+                                imp.battr.forEach(attr => {
+                                    const attrName = getAttributeName(attr);
+                                    html += `<span style="display: inline-block; margin: 2px 5px 2px 0; padding: 2px 8px; background: #fd7e14; color: white; border-radius: 12px; font-size: 12px;">${attr} - ${attrName}</span>`;
+                                });
+                                html += `</div>`;
+                            }
+                            
+                            html += `</div>`;
+                        }
+                        
+                        html += `</div>`;
+                    });
+                    html += '</div>';
+                }
+                
+                // 全局拦截规则
+                if (bidData.badv || bidData.bcat || bidData.battr) {
+                    html += '<div style="margin-bottom: 20px;">';
+                    html += '<h4 style="color: #34495e; margin-bottom: 10px;">🚫 全局拦截规则</h4>';
+                    html += `<div style="padding: 15px; background: #f8d7da; border-radius: 6px;">`;
+                    
+                    if (bidData.badv && bidData.badv.length > 0) {
+                        html += `<div style="margin-bottom: 15px;"><strong>拦截广告主域名:</strong><br>`;
+                        html += `<div style="font-family: monospace; color: #721c24; margin-top: 5px;">${bidData.badv.join(', ')}</div></div>`;
+                    }
+                    
+                    if (bidData.bcat && bidData.bcat.length > 0) {
+                        html += `<div style="margin-bottom: 15px;"><strong>拦截广告类别:</strong><br>`;
+                        html += `<div style="margin-top: 8px;">`;
+                        bidData.bcat.forEach(cat => {
+                            const catName = getCategoryName(cat);
+                            html += `<span style="display: inline-block; margin: 3px 8px 3px 0; padding: 4px 12px; background: #dc3545; color: white; border-radius: 15px; font-size: 13px;">${cat} - ${catName}</span>`;
+                        });
+                        html += `</div></div>`;
+                    }
+                    
+                    if (bidData.battr && bidData.battr.length > 0) {
+                        html += `<div><strong>拦截广告属性:</strong><br>`;
+                        html += `<div style="margin-top: 8px;">`;
+                        bidData.battr.forEach(attr => {
+                            const attrName = getAttributeName(attr);
+                            html += `<span style="display: inline-block; margin: 3px 8px 3px 0; padding: 4px 12px; background: #fd7e14; color: white; border-radius: 15px; font-size: 13px;">${attr} - ${attrName}</span>`;
+                        });
+                        html += `</div></div>`;
+                    }
+                    
+                    html += `</div></div>`;
+                }
+                
+                // 设备信息
+                if (bidData.device) {
+                    html += '<div style="margin-bottom: 20px;">';
+                    html += '<h4 style="color: #34495e; margin-bottom: 10px;">📱 设备信息</h4>';
+                    html += `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px;">`;
+                    
+                    const device = bidData.device;
+                    if (device.ua) html += `<div><strong>User Agent:</strong> ${device.ua.substring(0, 50)}...</div>`;
+                    if (device.ip) html += `<div><strong>IP:</strong> ${device.ip}</div>`;
+                    if (device.make) html += `<div><strong>设备厂商:</strong> ${device.make}</div>`;
+                    if (device.model) html += `<div><strong>设备型号:</strong> ${device.model}</div>`;
+                    if (device.os) html += `<div><strong>操作系统:</strong> ${device.os}</div>`;
+                    if (device.osv) html += `<div><strong>系统版本:</strong> ${device.osv}</div>`;
+                    
+                    html += `</div></div>`;
+                }
+            }
+            
+            analysisDiv.innerHTML = html;
+        }
+
+        // IAB广告类别解析
+        function getCategoryName(category) {
+            const categories = {
+                'IAB1': '艺术与娱乐',
+                'IAB2': '汽车',
+                'IAB3': '商业',
+                'IAB4': '职业',
+                'IAB5': '教育',
+                'IAB6': '家庭与育儿',
+                'IAB7': '健康与健身',
+                'IAB8': '食品与饮料',
+                'IAB9': '爱好与兴趣',
+                'IAB10': '家居与花园',
+                'IAB11': '法律、政府与政治',
+                'IAB12': '新闻',
+                'IAB13': '个人理财',
+                'IAB14': '社会',
+                'IAB15': '科学',
+                'IAB16': '宠物',
+                'IAB17': '体育',
+                'IAB18': '风格与时尚',
+                'IAB19': '技术与计算',
+                'IAB20': '旅游',
+                'IAB21': '房地产',
+                'IAB22': '购物',
+                'IAB23': '宗教与灵性',
+                'IAB24': '未分类',
+                'IAB25': '非标准内容',
+                'IAB26': '违法内容'
+            };
+            
+            // 处理子类别
+            const mainCat = category.split('-')[0];
+            return categories[mainCat] || categories[category] || '未知类别';
+        }
+
+        // 广告属性解析
+        function getAttributeName(attr) {
+            const attributes = {
+                1: '音频广告(自动播放)',
+                2: '音频广告(用户启动)',
+                3: '可展开广告(自动)',
+                4: '可展开广告(用户点击)',
+                5: '可展开广告(用户滚动)',
+                6: '游戏内广告',
+                7: '弹窗广告',
+                8: '挑衅性或暗示性图像',
+                9: '闪烁文字',
+                10: '调查',
+                11: '文本输入',
+                12: '用户交互警告',
+                13: '窗口对话框或警告样式',
+                14: '有音频按钮/控件',
+                15: '跳过按钮(视频广告)',
+                16: 'Adobe Flash'
+            };
+            
+            return attributes[attr] || `属性${attr}`;
+        }
+
+        function clearBid() {
+            document.getElementById('bidInput').value = '';
+            document.getElementById('bidOutput').value = '';
+            document.getElementById('bidAnalysis').innerHTML = '';
+        }
+
+        function copyBidJson() {
+            const jsonContent = document.getElementById('bidOutput').value;
+            
+            if (!jsonContent) {
+                showBidMessage('请先解析Bid内容');
+                return;
+            }
+            
+            navigator.clipboard.writeText(jsonContent).then(() => {
+                showBidMessage('JSON已复制到剪贴板！', 'success');
+            }).catch(() => {
+                showBidMessage('复制失败，请手动选择复制');
+            });
+        }
+
+        // 细粒度预算生成工具相关函数
+        function showBudgetMessage(text, type = 'error') {
+            const messageDiv = document.getElementById('budgetMessage');
+            messageDiv.innerHTML = `<div class="${type}">${text}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        // 操作模式切换
+        document.addEventListener('DOMContentLoaded', function() {
+            const radioButtons = document.querySelectorAll('input[name="operationMode"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const updateMode = document.getElementById('updateMode');
+                    const deleteMode = document.getElementById('deleteMode');
+                    
+                    if (this.value === 'update' || this.value === 'add-only' || this.value === 'add-and-override-zero') {
+                        updateMode.style.display = 'block';
+                        deleteMode.style.display = 'none';
+                    } else {
+                        updateMode.style.display = 'none';
+                        deleteMode.style.display = 'block';
+                    }
+                });
+            });
+        });
+
+        function adjustBudget() {
+            const currentBudgetText = document.getElementById('currentBudgetInput').value.trim();
+            const operationMode = document.querySelector('input[name="operationMode"]:checked').value;
+            
+            // 删除模式必须有当前预算配置
+            if (operationMode === 'delete' && !currentBudgetText) {
+                showBudgetMessage('删除模式需要输入当前预算配置');
+                return;
+            }
+            
+            if (operationMode === 'update' || operationMode === 'add-only' || operationMode === 'add-and-override-zero') {
+                performUpdateBudget(currentBudgetText, operationMode);
+            } else {
+                performDeleteBudget(currentBudgetText);
+            }
+        }
+
+        function performUpdateBudget(currentBudgetText, mode = 'update') {
+            const updateRulesText = document.getElementById('updateRulesInput').value.trim();
+            const defaultCap = document.getElementById('defaultCapInput').value.trim();
+            
+            if (!updateRulesText) {
+                showBudgetMessage('请输入更新规则');
+                return;
+            }
+            
+            try {
+                // 解析当前预算配置
+                const currentBudgets = new Map();
+                if (currentBudgetText) {
+                    const currentLines = currentBudgetText.split('\n').filter(line => line.trim());
+                    
+                    currentLines.forEach(line => {
+                        const trimmedLine = line.trim();
+                        if (!trimmedLine) return;
+                        
+                        const colonIndex = trimmedLine.lastIndexOf(':');
+                        if (colonIndex === -1) return;
+                        
+                        const key = trimmedLine.substring(0, colonIndex);
+                        const budget = trimmedLine.substring(colonIndex + 1);
+                        currentBudgets.set(key, budget);
+                    });
+                }
+                
+                // 解析更新规则
+                const updateRules = [];
+                const updateLines = updateRulesText.split('\n').filter(line => line.trim());
+                
+                updateLines.forEach(line => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine) return;
+                    
+                    // 跳过包含"空白"的行
+                    if (trimmedLine.includes('空白')) return;
+                    
+                    const parts = trimmedLine.split(/\t+|\s{2,}/).filter(part => part.trim());
+                    if (parts.length < 1) return;
+                    
+                    let newBudget = null;
+                    let dimensions = parts;
+                    
+                    // 使用智能识别逻辑
+                    if (parts.length === 4) {
+                        const lastPart = parts[3];
+                        const isNumber = !isNaN(lastPart) && lastPart.trim() !== '';
+                        const isNotThousandMultiple = isNumber && (parseFloat(lastPart) % 1000 !== 0);
+                        
+                        if (isNumber && isNotThousandMultiple) {
+                            dimensions = parts;
+                            newBudget = null;
+                        } else if (isNumber) {
+                            newBudget = lastPart;
+                            dimensions = parts.slice(0, -1);
+                        } else {
+                            dimensions = parts;
+                            newBudget = null;
+                        }
+                    } else {
+                        const lastPart = parts[parts.length - 1];
+                        if (!isNaN(lastPart) && lastPart.trim() !== '') {
+                            newBudget = lastPart;
+                            dimensions = parts.slice(0, -1);
+                        }
+                    }
+                    
+                    if (newBudget === null) {
+                        if (!defaultCap || isNaN(defaultCap)) {
+                            showBudgetMessage('请输入默认预算或在更新规则中指定预算值');
+                            return;
+                        }
+                        newBudget = defaultCap;
+                    }
+                    
+                    let key = dimensions.join('#');
+                    while (dimensions.length < 4) {
+                        key += '#';
+                        dimensions.push('');
+                    }
+                    
+                    updateRules.push({ key, budget: newBudget });
+                });
+                
+                // 应用更新规则
+                const stats = {
+                    originalCount: currentBudgets.size,
+                    newCount: 0,
+                    updated: 0,
+                    unchanged: currentBudgets.size,
+                    skipped: 0,
+                    overridden: 0,
+                    totalBudgetBefore: 0,
+                    totalBudgetAfter: 0,
+                    isFromScratch: currentBudgets.size === 0,
+                    isAddOnlyMode: mode === 'add-only',
+                    isAddAndOverrideZeroMode: mode === 'add-and-override-zero',
+                    newItems: [],
+                    overriddenItems: []
+                };
+                
+                currentBudgets.forEach(budget => {
+                    stats.totalBudgetBefore += parseFloat(budget) || 0;
+                });
+                
+                updateRules.forEach(rule => {
+                    if (currentBudgets.has(rule.key)) {
+                        const currentBudget = parseFloat(currentBudgets.get(rule.key)) || 0;
+                        
+                        if (mode === 'add-only') {
+                            stats.skipped++;
+                        } else if (mode === 'add-and-override-zero') {
+                            if (currentBudget === 0) {
+                                currentBudgets.set(rule.key, rule.budget);
+                                stats.overridden++;
+                                stats.overriddenItems.push({ key: rule.key, budget: rule.budget });
+                            } else {
+                                stats.skipped++;
+                            }
+                        } else {
+                            currentBudgets.set(rule.key, rule.budget);
+                            stats.updated++;
+                            stats.unchanged--;
+                        }
+                    } else {
+                        currentBudgets.set(rule.key, rule.budget);
+                        stats.newCount++;
+                        stats.newItems.push({ key: rule.key, budget: rule.budget });
+                    }
+                });
+                
+                currentBudgets.forEach(budget => {
+                    stats.totalBudgetAfter += parseFloat(budget) || 0;
+                });
+                
+                const results = [];
+                currentBudgets.forEach((budget, key) => {
+                    results.push(`${key}:${budget}`);
+                });
+                
+                document.getElementById('budgetOutput').value = results.join('\n');
+                showBudgetStats(stats);
+                showBudgetDetails(stats);
+                
+                const totalChanges = stats.updated + stats.newCount + stats.overridden;
+                if (stats.isFromScratch) {
+                    showBudgetMessage(`成功创建 ${stats.newCount} 条新预算配置！`, 'success');
+                } else if (stats.isAddOnlyMode) {
+                    showBudgetMessage(`成功新增 ${stats.newCount} 条配置，跳过 ${stats.skipped} 条已存在配置！`, 'success');
+                } else if (stats.isAddAndOverrideZeroMode) {
+                    showBudgetMessage(`成功新增 ${stats.newCount} 条配置，覆盖 ${stats.overridden} 条预算为0的配置，跳过 ${stats.skipped} 条已存在配置！`, 'success');
+                } else {
+                    showBudgetMessage(`成功处理 ${totalChanges} 条配置 (更新${stats.updated}条，新增${stats.newCount}条)！`, 'success');
+                }
+                
+            } catch (error) {
+                showBudgetMessage('更新失败: ' + error.message);
+            }
+        }
+
+        function performDeleteBudget(currentBudgetText) {
+            const deleteRulesText = document.getElementById('deleteRulesInput').value.trim();
+            
+            if (!deleteRulesText) {
+                showBudgetMessage('请输入删除规则');
+                return;
+            }
+            
+            try {
+                // 解析当前预算配置
+                const currentBudgets = new Map();
+                const currentLines = currentBudgetText.split('\n').filter(line => line.trim());
+                
+                currentLines.forEach(line => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine) return;
+                    
+                    const colonIndex = trimmedLine.lastIndexOf(':');
+                    if (colonIndex === -1) return;
+                    
+                    const key = trimmedLine.substring(0, colonIndex);
+                    const budget = trimmedLine.substring(colonIndex + 1);
+                    currentBudgets.set(key, budget);
+                });
+                
+                // 解析删除规则
+                const deleteKeys = new Set();
+                const deleteLines = deleteRulesText.split('\n').filter(line => line.trim());
+                
+                deleteLines.forEach(line => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine) return;
+                    
+                    // 跳过包含"空白"的行
+                    if (trimmedLine.includes('空白')) return;
+                    
+                    const parts = trimmedLine.split(/\t+|\s{2,}/).filter(part => part.trim());
+                    if (parts.length < 1) return;
+                    
+                    let dimensions = parts;
+                    
+                    // 使用智能识别逻辑，但删除模式下不考虑预算值
+                    if (parts.length === 4) {
+                        const lastPart = parts[3];
+                        const isNumber = !isNaN(lastPart) && lastPart.trim() !== '';
+                        const isNotThousandMultiple = isNumber && (parseFloat(lastPart) % 1000 !== 0);
+                        
+                        if (isNumber && isNotThousandMultiple) {
+                            // 按adx+first_ssp+bundle+placement模式
+                            dimensions = parts;
+                        } else if (isNumber) {
+                            // 最后一位可能是预算值，但删除模式下忽略
+                            dimensions = parts;
+                        } else {
+                            dimensions = parts;
+                        }
+                    }
+                    
+                    // 生成key
+                    let key = dimensions.join('#');
+                    while (dimensions.length < 4) {
+                        key += '#';
+                        dimensions.push('');
+                    }
+                    
+                    deleteKeys.add(key);
+                });
+                
+                // 统计信息
+                const stats = {
+                    originalCount: currentBudgets.size,
+                    deleted: 0,
+                    notFound: 0,
+                    remaining: 0,
+                    totalBudgetBefore: 0,
+                    totalBudgetAfter: 0
+                };
+                
+                // 计算删除前总预算
+                currentBudgets.forEach(budget => {
+                    stats.totalBudgetBefore += parseFloat(budget) || 0;
+                });
+                
+                // 执行删除
+                deleteKeys.forEach(key => {
+                    if (currentBudgets.has(key)) {
+                        currentBudgets.delete(key);
+                        stats.deleted++;
+                    } else {
+                        stats.notFound++;
+                    }
+                });
+                
+                stats.remaining = currentBudgets.size;
+                
+                // 计算删除后总预算
+                currentBudgets.forEach(budget => {
+                    stats.totalBudgetAfter += parseFloat(budget) || 0;
+                });
+                
+                // 生成结果
+                const results = [];
+                currentBudgets.forEach((budget, key) => {
+                    results.push(`${key}:${budget}`);
+                });
+                
+                document.getElementById('budgetOutput').value = results.join('\n');
+                
+                // 显示删除统计
+                showDeleteStats(stats);
+                
+                showBudgetMessage(`删除完成！成功删除 ${stats.deleted} 条配置，剩余 ${stats.remaining} 条配置`, 'success');
+                
+            } catch (error) {
+                showBudgetMessage('删除失败: ' + error.message);
+            }
+        }
+
+        function showDeleteStats(stats) {
+            const previewDiv = document.getElementById('budgetPreview');
+            const statsDiv = document.getElementById('budgetStats');
+            
+            const budgetChange = stats.totalBudgetAfter - stats.totalBudgetBefore;
+            
+            let html = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
+                    <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                        <div style="font-size: 20px; font-weight: bold; color: #2980b9;">${stats.originalCount}</div>
+                        <div style="color: #7f8c8d; font-size: 12px;">原配置数</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                        <div style="font-size: 20px; font-weight: bold; color: #e74c3c;">${stats.deleted}</div>
+                        <div style="color: #7f8c8d; font-size: 12px;">已删除</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                        <div style="font-size: 20px; font-weight: bold; color: #95a5a6;">${stats.notFound}</div>
+                        <div style="color: #7f8c8d; font-size: 12px;">未找到</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                        <div style="font-size: 20px; font-weight: bold; color: #27ae60;">${stats.remaining}</div>
+                        <div style="color: #7f8c8d; font-size: 12px;">剩余配置</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                        <div style="font-size: 16px; font-weight: bold; color: #f39c12;">${stats.totalBudgetBefore.toFixed(2)}</div>
+                        <div style="color: #7f8c8d; font-size: 12px;">原总预算</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                        <div style="font-size: 16px; font-weight: bold; color: #f39c12;">${stats.totalBudgetAfter.toFixed(2)}</div>
+                        <div style="color: #7f8c8d; font-size: 12px;">剩余预算</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                        <div style="font-size: 16px; font-weight: bold; color: #e74c3c;">${budgetChange.toFixed(2)}</div>
+                        <div style="color: #7f8c8d; font-size: 12px;">预算减少</div>
+                    </div>
+                </div>
+            `;
+            
+            statsDiv.innerHTML = html;
+            previewDiv.style.display = 'block';
+        }
+
+        function showBudgetDetails(stats) {
+            const detailsDiv = document.getElementById('budgetDetails');
+            const contentDiv = document.getElementById('budgetDetailsContent');
+            
+            if (stats.newItems.length === 0 && stats.overriddenItems.length === 0) {
+                detailsDiv.style.display = 'none';
+                return;
+            }
+            
+            let html = '';
+            
+            if (stats.newItems.length > 0) {
+                const newKeys = stats.newItems.map(item => item.key).join('\n');
+                html += '<div style="margin-bottom: 20px;">';
+                html += '<label style="color: #3498db; font-weight: bold; margin-bottom: 8px; display: block;">✨ 新增的组合 (' + stats.newItems.length + '条)</label>';
+                html += `<textarea readonly style="width: 100%; min-height: 150px; padding: 10px; border: 2px solid #3498db; border-radius: 6px; font-family: monospace; font-size: 12px; resize: vertical;">${newKeys}</textarea>`;
+                html += '<button class="btn-secondary" style="margin-top: 8px; padding: 6px 12px; font-size: 12px;" onclick="copyToClipboard(\'' + 'newItems' + '\')">复制新增组合</button>';
+                html += '</div>';
+            }
+            
+            if (stats.overriddenItems.length > 0) {
+                const overriddenKeys = stats.overriddenItems.map(item => item.key).join('\n');
+                html += '<div>';
+                html += '<label style="color: #e67e22; font-weight: bold; margin-bottom: 8px; display: block;">🔄 从0覆盖的组合 (' + stats.overriddenItems.length + '条)</label>';
+                html += `<textarea readonly style="width: 100%; min-height: 150px; padding: 10px; border: 2px solid #e67e22; border-radius: 6px; font-family: monospace; font-size: 12px; resize: vertical;">${overriddenKeys}</textarea>`;
+                html += '<button class="btn-secondary" style="margin-top: 8px; padding: 6px 12px; font-size: 12px;" onclick="copyToClipboard(\'' + 'overriddenItems' + '\')">复制覆盖组合</button>';
+                html += '</div>';
+            }
+            
+            contentDiv.innerHTML = html;
+            detailsDiv.style.display = 'block';
+        }
+        
+        function copyToClipboard(type) {
+            const textareas = document.querySelectorAll('#budgetDetailsContent textarea');
+            let text = '';
+            
+            if (type === 'newItems' && textareas[0]) {
+                text = textareas[0].value;
+            } else if (type === 'overriddenItems') {
+                text = textareas.length > 1 ? textareas[1].value : textareas[0].value;
+            }
+            
+            if (text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showBudgetMessage('组合已复制到剪贴板！', 'success');
+                }).catch(() => {
+                    showBudgetMessage('复制失败，请手动选择复制');
+                });
+            }
+        }
+
+        function showBudgetStats(stats) {
+            const previewDiv = document.getElementById('budgetPreview');
+            const statsDiv = document.getElementById('budgetStats');
+            
+            const budgetChange = stats.totalBudgetAfter - stats.totalBudgetBefore;
+            const changeColor = budgetChange > 0 ? '#27ae60' : budgetChange < 0 ? '#e74c3c' : '#7f8c8d';
+            const changeSymbol = budgetChange > 0 ? '+' : '';
+            
+            let html = '';
+            
+            if (stats.isFromScratch) {
+                // 从零创建的统计显示
+                html = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 20px; font-weight: bold; color: #3498db;">${stats.newCount}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">新建配置</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 16px; font-weight: bold; color: #f39c12;">${stats.totalBudgetAfter.toFixed(2)}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">总预算设置</div>
+                        </div>
+                    </div>
+                `;
+            } else if (stats.isAddOnlyMode) {
+                // 仅新增模式的统计显示
+                html = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 20px; font-weight: bold; color: #2980b9;">${stats.originalCount + stats.newCount}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">总配置数</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 20px; font-weight: bold; color: #3498db;">${stats.newCount}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">新增</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 20px; font-weight: bold; color: #f39c12;">${stats.skipped}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">跳过</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 20px; font-weight: bold; color: #95a5a6;">${stats.unchanged}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">未变更</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 16px; font-weight: bold; color: #f39c12;">${stats.totalBudgetBefore.toFixed(2)}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">原总预算</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 16px; font-weight: bold; color: #f39c12;">${stats.totalBudgetAfter.toFixed(2)}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">新总预算</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 16px; font-weight: bold; color: ${changeColor};">${changeSymbol}${budgetChange.toFixed(2)}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">预算变化</div>
+                        </div>
+                    </div>
+                `;
+            } else if (stats.isAddAndOverrideZeroMode) {
+                // 新增&覆盖为0模式的统计显示
+                html = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 20px; font-weight: bold; color: #2980b9;">${stats.originalCount + stats.newCount}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">总配置数</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 20px; font-weight: bold; color: #3498db;">${stats.newCount}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">新增</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 20px; font-weight: bold; color: #e67e22;">${stats.overridden}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">覆盖为0的</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 20px; font-weight: bold; color: #f39c12;">${stats.skipped}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">跳过</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 20px; font-weight: bold; color: #95a5a6;">${stats.unchanged}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">未变更</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 16px; font-weight: bold; color: #f39c12;">${stats.totalBudgetBefore.toFixed(2)}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">原总预算</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 16px; font-weight: bold; color: #f39c12;">${stats.totalBudgetAfter.toFixed(2)}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">新总预算</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 16px; font-weight: bold; color: ${changeColor};">${changeSymbol}${budgetChange.toFixed(2)}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">预算变化</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // 更新现有配置的统计显示
+                html = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 20px; font-weight: bold; color: #2980b9;">${stats.originalCount + stats.newCount}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">总配置数</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 20px; font-weight: bold; color: #27ae60;">${stats.updated}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">已更新</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 20px; font-weight: bold; color: #3498db;">${stats.newCount}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">新增</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 20px; font-weight: bold; color: #95a5a6;">${stats.unchanged}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">未变更</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 16px; font-weight: bold; color: #f39c12;">${stats.totalBudgetBefore.toFixed(2)}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">原总预算</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 16px; font-weight: bold; color: #f39c12;">${stats.totalBudgetAfter.toFixed(2)}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">新总预算</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: 16px; font-weight: bold; color: ${changeColor};">${changeSymbol}${budgetChange.toFixed(2)}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">预算变化</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            statsDiv.innerHTML = html;
+            previewDiv.style.display = 'block';
+        }
+
+        function clearAdjustment() {
+            document.getElementById('currentBudgetInput').value = '';
+            document.getElementById('updateRulesInput').value = '';
+            document.getElementById('deleteRulesInput').value = '';
+            document.getElementById('defaultCapInput').value = '';
+            document.getElementById('budgetOutput').value = '';
+            document.getElementById('budgetPreview').style.display = 'none';
+            document.getElementById('budgetDetails').style.display = 'none';
+            
+            // 重置为更新模式
+            document.querySelector('input[name="operationMode"][value="update"]').checked = true;
+            document.getElementById('updateMode').style.display = 'block';
+            document.getElementById('deleteMode').style.display = 'none';
+        }
+
+        function copyBudgetResult() {
+            const result = document.getElementById('budgetOutput').value;
+            
+            if (!result) {
+                showBudgetMessage('请先执行预算调整');
+                return;
+            }
+            
+            navigator.clipboard.writeText(result).then(() => {
+                showBudgetMessage('调整结果已复制到剪贴板！', 'success');
+            }).catch(() => {
+                showBudgetMessage('复制失败，请手动选择复制');
+            });
+        }
+
+        function downloadBudgetFile() {
+            const result = document.getElementById('budgetOutput').value;
+            
+            if (!result) {
+                showBudgetMessage('请先执行预算调整');
+                return;
+            }
+            
+            const blob = new Blob([result], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `budget_config_${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showBudgetMessage('预算配置文件下载成功！', 'success');
+        }
+
+        // 预算与impression对比相关函数
+        function showComparisonMessage(text, type = 'error') {
+            const messageDiv = document.getElementById('comparisonMessage');
+            messageDiv.innerHTML = `<div class="${type}">${text}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        function compareImpressions() {
+            const budgetCapText = document.getElementById('budgetCapInput').value.trim();
+            const yesterdayImpText = document.getElementById('yesterdayImpInput').value.trim();
+            
+            if (!budgetCapText) {
+                showComparisonMessage('请输入当前预算配置');
+                return;
+            }
+            
+            if (!yesterdayImpText) {
+                showComparisonMessage('请输入昨天impression数据');
+                return;
+            }
+            
+            try {
+                // 解析预算配置
+                const budgetCaps = new Map();
+                const budgetLines = budgetCapText.split('\n').filter(line => line.trim());
+                
+                budgetLines.forEach(line => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine) return;
+                    
+                    const colonIndex = trimmedLine.lastIndexOf(':');
+                    if (colonIndex === -1) return;
+                    
+                    const key = trimmedLine.substring(0, colonIndex);
+                    const cap = parseInt(trimmedLine.substring(colonIndex + 1));
+                    if (!isNaN(cap)) {
+                        budgetCaps.set(key, cap);
+                    }
+                });
+                
+                // 解析昨天impression数据（使用与更新规则相同的逻辑）
+                const yesterdayImps = new Map();
+                const impLines = yesterdayImpText.split('\n').filter(line => line.trim());
+                
+                impLines.forEach(line => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine) return;
+                    
+                    // 跳过包含"空白"的行
+                    if (trimmedLine.includes('空白')) return;
+                    
+                    const parts = trimmedLine.split(/\t+|\s{2,}/).filter(part => part.trim());
+                    if (parts.length < 1) return;
+                    
+                    let impressionCount = null;
+                    let dimensions = parts;
+                    
+                    // 使用与更新规则相同的智能识别逻辑
+                    if (parts.length === 4) {
+                        const lastPart = parts[3];
+                        const isNumber = !isNaN(lastPart) && lastPart.trim() !== '';
+                        const isNotThousandMultiple = isNumber && (parseFloat(lastPart) % 1000 !== 0);
+                        
+                        if (isNumber && isNotThousandMultiple) {
+                            // 按adx+first_ssp+bundle+placement模式
+                            dimensions = parts;
+                            impressionCount = null; // 这种情况下没有impression数据
+                        } else if (isNumber) {
+                            // 最后一位是impression数据
+                            impressionCount = parseInt(lastPart);
+                            dimensions = parts.slice(0, -1);
+                        } else {
+                            dimensions = parts;
+                            impressionCount = null;
+                        }
+                    } else {
+                        // 其他情况：检查最后一个部分是否为数字
+                        const lastPart = parts[parts.length - 1];
+                        if (!isNaN(lastPart) && lastPart.trim() !== '') {
+                            impressionCount = parseInt(lastPart);
+                            dimensions = parts.slice(0, -1);
+                        }
+                    }
+                    
+                    if (impressionCount !== null && !isNaN(impressionCount)) {
+                        // 生成key，补充#到4个维度
+                        let key = dimensions.join('#');
+                        while (dimensions.length < 4) {
+                            key += '#';
+                            dimensions.push('');
+                        }
+                        
+                        yesterdayImps.set(key, impressionCount);
+                    }
+                });
+                
+                // 生成对比结果
+                const comparisonData = [];
+                const stats = {
+                    total: 0,
+                    higher: 0,
+                    lower: 0,
+                    equal: 0,
+                    noData: 0,
+                    totalCap: 0,
+                    totalImp: 0
+                };
+                
+                // 合并所有key
+                const allKeys = new Set([...budgetCaps.keys(), ...yesterdayImps.keys()]);
+                
+                allKeys.forEach(key => {
+                    const cap = budgetCaps.get(key) || 0;
+                    const imp = yesterdayImps.get(key) || 0;
+                    
+                    let status = 'no-data';
+                    let statusText = '无数据';
+                    let color = '#95a5a6';
+                    
+                    if (cap > 0 && imp > 0) {
+                        if (cap > imp) {
+                            status = 'higher';
+                            statusText = '预算充足';
+                            color = '#27ae60';
+                            stats.higher++;
+                        } else if (cap < imp) {
+                            status = 'lower';
+                            statusText = '预算不足';
+                            color = '#e74c3c';
+                            stats.lower++;
+                        } else {
+                            status = 'equal';
+                            statusText = '预算匹配';
+                            color = '#f39c12';
+                            stats.equal++;
+                        }
+                    } else if (cap > 0 && imp === 0) {
+                        status = 'no-imp';
+                        statusText = '无曝光';
+                        color = '#3498db';
+                        stats.noData++;
+                    } else if (cap === 0 && imp > 0) {
+                        status = 'no-cap';
+                        statusText = '无预算';
+                        color = '#9b59b6';
+                        stats.noData++;
+                    }
+                    
+                    comparisonData.push({
+                        key,
+                        cap,
+                        imp,
+                        status,
+                        statusText,
+                        color,
+                        ratio: cap > 0 ? (imp / cap * 100).toFixed(1) : 'N/A'
+                    });
+                    
+                    stats.total++;
+                    stats.totalCap += cap;
+                    stats.totalImp += imp;
+                });
+                
+                // 显示对比结果
+                displayComparisonResults(comparisonData, stats);
+                
+                showComparisonMessage(`对比完成！共分析 ${stats.total} 个组合`, 'success');
+                
+            } catch (error) {
+                showComparisonMessage('对比失败: ' + error.message);
+            }
+        }
+
+        function displayComparisonResults(data, stats) {
+            // 轻量级存储，只在需要导出时保存
+            comparisonData = data;
+            
+            const resultsDiv = document.getElementById('comparisonResults');
+            const tableDiv = document.getElementById('comparisonTable');
+            const statsDiv = document.getElementById('comparisonStats');
+            
+            // 优化表格生成 - 减少字符串拼接
+            const tableRows = data.sort((a, b) => {
+                const order = { 'lower': 0, 'higher': 1, 'equal': 2, 'no-imp': 3, 'no-cap': 4, 'no-data': 5 };
+                return order[a.status] - order[b.status];
+            }).map(item => `
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 10px; border: 1px solid #ddd; font-family: monospace; font-size: 12px;">${item.key}</td>
+                    <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">${item.cap.toLocaleString()}</td>
+                    <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">${item.imp.toLocaleString()}</td>
+                    <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">${item.ratio}%</td>
+                    <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">
+                        <span style="padding: 4px 8px; border-radius: 12px; color: white; background: ${item.color}; font-size: 12px;">
+                            ${item.statusText}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+            
+            tableDiv.innerHTML = `
+                <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                    <thead>
+                        <tr style="background: #34495e; color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">组合</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">预算Cap</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">昨日Impression</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">使用率</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tableRows}</tbody>
+                </table>
+            `;
+            
+            // 优化统计信息生成
+            const utilizationRate = stats.totalCap > 0 ? (stats.totalImp / stats.totalCap * 100).toFixed(1) : 0;
+            const statsItems = [
+                { value: stats.total, label: '总组合数', color: '#2980b9' },
+                { value: stats.lower, label: '预算不足', color: '#e74c3c' },
+                { value: stats.higher, label: '预算充足', color: '#27ae60' },
+                { value: stats.equal, label: '预算匹配', color: '#f39c12' },
+                { value: stats.totalCap.toLocaleString(), label: '总预算', color: '#3498db' },
+                { value: stats.totalImp.toLocaleString(), label: '总曝光', color: '#9b59b6' },
+                { value: `${utilizationRate}%`, label: '预算使用率', color: '#e67e22' }
+            ];
+            
+            statsDiv.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
+                    ${statsItems.map(item => `
+                        <div style="text-align: center; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-size: ${item.label.includes('总') ? '16px' : '20px'}; font-weight: bold; color: ${item.color};">${item.value}</div>
+                            <div style="color: #7f8c8d; font-size: 12px;">${item.label}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            resultsDiv.style.display = 'block';
+        }
+
+        function clearComparison() {
+            document.getElementById('budgetCapInput').value = '';
+            document.getElementById('yesterdayImpInput').value = '';
+            document.getElementById('comparisonResults').style.display = 'none';
+            comparisonData = null; // 清理缓存
+        }
+
+        function exportComparisonCSV() {
+            if (!comparisonData || comparisonData.length === 0) {
+                showComparisonMessage('没有可导出的对比数据');
+                return;
+            }
+            
+            try {
+                // 优化CSV生成 - 减少字符串拼接
+                const csvRows = ['\uFEFF组合,ADX,First_SSP,Bundle,Placement,预算Cap,昨日Impression,使用率(%),状态'];
+                
+                comparisonData.forEach(item => {
+                    const keyParts = item.key.split('#');
+                    const usageRate = item.ratio === 'N/A' ? '0' : item.ratio;
+                    csvRows.push(`"${item.key}","${keyParts[0] || ''}","${keyParts[1] || ''}","${keyParts[2] || ''}","${keyParts[3] || ''}",${item.cap},${item.imp},"${usageRate}","${item.statusText}"`);
+                });
+                
+                const csvContent = csvRows.join('\n');
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `budget_impression_comparison_${new Date().toISOString().slice(0, 10)}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showComparisonMessage('CSV文件导出成功！', 'success');
+                
+            } catch (error) {
+                showComparisonMessage('导出失败: ' + error.message);
+            }
+        }
+
+        // 快速SQL生成工具相关函数
+        function showSQLMessage(text, type = 'error') {
+            const messageDiv = document.getElementById('sqlMessage');
+            messageDiv.innerHTML = `<div class="${type}">${text}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        // SQL类型切换
+        document.addEventListener('DOMContentLoaded', function() {
+            const sqlTypeRadios = document.querySelectorAll('input[name="sqlType"]');
+            sqlTypeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const blockMode = document.getElementById('blockPlacementMode');
+                    const quickConcatMode = document.getElementById('quickConcatMode');
+                    const useExploreMode = document.getElementById('useExploreDataMode');
+                    const useExploreFullMode = document.getElementById('useExploreDataFullMode');
+                    const admConfig8020Mode = document.getElementById('admConfig8020Mode');
+                    
+                    if (this.value === 'block-placement') {
+                        blockMode.style.display = 'block';
+                        quickConcatMode.style.display = 'none';
+                        useExploreMode.style.display = 'none';
+                        useExploreFullMode.style.display = 'none';
+                        admConfig8020Mode.style.display = 'none';
+                    } else if (this.value === 'quick-concat') {
+                        blockMode.style.display = 'none';
+                        quickConcatMode.style.display = 'block';
+                        useExploreMode.style.display = 'none';
+                        useExploreFullMode.style.display = 'none';
+                        admConfig8020Mode.style.display = 'none';
+                    } else if (this.value === 'use-explore-data') {
+                        blockMode.style.display = 'none';
+                        quickConcatMode.style.display = 'none';
+                        useExploreMode.style.display = 'block';
+                        useExploreFullMode.style.display = 'none';
+                        admConfig8020Mode.style.display = 'none';
+                    } else if (this.value === 'use-explore-data-full') {
+                        blockMode.style.display = 'none';
+                        quickConcatMode.style.display = 'none';
+                        useExploreMode.style.display = 'none';
+                        useExploreFullMode.style.display = 'block';
+                        admConfig8020Mode.style.display = 'none';
+                    } else if (this.value === 'adm-config-8020') {
+                        blockMode.style.display = 'none';
+                        quickConcatMode.style.display = 'none';
+                        useExploreMode.style.display = 'none';
+                        useExploreFullMode.style.display = 'none';
+                        admConfig8020Mode.style.display = 'block';
+                    }
+                });
+            });
+        });
+
+        function generateSQL() {
+            const sqlType = document.querySelector('input[name="sqlType"]:checked').value;
+            
+            if (sqlType === 'block-placement') {
+                generateBlockPlacementSQL();
+            } else if (sqlType === 'quick-concat') {
+                generateQuickConcatSQL();
+            } else if (sqlType === 'use-explore-data') {
+                generateUseExploreDataSQL();
+            } else if (sqlType === 'use-explore-data-full') {
+                generateUseExploreDataFullSQL();
+            } else if (sqlType === 'adm-config-8020') {
+                generateAdmConfig8020SQL();
+            }
+        }
+
+        // 全局变量优化 - 只保留必要的缓存
+        let currentSegments = null;
+        let currentType = null;
+        let comparisonData = null; // 替代globalComparisonData
+
+        function generateQuickConcatSQL() {
+            const inputText = document.getElementById('quickConcatInput').value.trim();
+            
+            if (!inputText) {
+                showSQLMessage('请输入数据');
+                return;
+            }
+            
+            try {
+                const lines = inputText.split('\n').filter(line => line.trim());
+                const processedItems = [];
+                
+                lines.forEach(line => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine) return;
+                    
+                    // 直接将整行内容的空格替换为#，不再按维度分割
+                    const processedLine = trimmedLine.replace(/\s+/g, '#');
+                    processedItems.push(`'${processedLine}'`);
+                });
+                
+                if (processedItems.length === 0) {
+                    showSQLMessage('没有有效的数据行');
+                    return;
+                }
+                
+                // 分割处理，每段最多5000条
+                const maxRecordsPerSegment = 5000;
+                const segments = [];
+                
+                for (let i = 0; i < processedItems.length; i += maxRecordsPerSegment) {
+                    const segment = processedItems.slice(i, i + maxRecordsPerSegment);
+                    segments.push(segment.join(','));
+                }
+                
+                let result;
+                if (segments.length === 1) {
+                    result = segments[0];
+                    hideSegmentDownloads();
+                } else {
+                    result = segments.map((segment, index) => 
+                        `-- 第${index + 1}段 (共${segments.length}段)\n${segment}`
+                    ).join('\n\n');
+                    currentSegments = segments;
+                    currentType = 'quick_concat';
+                    showSegmentDownloads(segments.length);
+                }
+                
+                document.getElementById('sqlOutput').value = result;
+                
+                const message = segments.length > 1 
+                    ? `成功处理 ${processedItems.length} 条记录，已分割为 ${segments.length} 段SQL！`
+                    : `成功处理 ${processedItems.length} 条记录的IN()内容！`;
+                showSQLMessage(message, 'success');
+                
+            } catch (error) {
+                showSQLMessage('生成失败: ' + error.message);
+            }
+        }
+
+        function generateUseExploreDataSQL() {
+            const inputText = document.getElementById('useExploreDataInput').value.trim();
+            const existingText = document.getElementById('existingDataInput').value.trim();
+            const admTemplateIds = document.getElementById('admTemplateIdsInput').value.trim();
+            const attr = document.getElementById('attrInput').value.trim();
+            
+            if (!inputText) {
+                showSQLMessage('请输入维护信息');
+                return;
+            }
+            
+            if (!admTemplateIds) {
+                showSQLMessage('请输入ADM Template IDs');
+                return;
+            }
+            
+            if (!attr) {
+                showSQLMessage('请输入Attr值');
+                return;
+            }
+            
+            try {
+                // 解析已存在的组合
+                const existingCombinations = new Set();
+                if (existingText) {
+                    const existingLines = existingText.split('\n').filter(line => line.trim());
+                    existingLines.forEach(line => {
+                        const parts = line.trim().split(/\t+|\s{2,}/).filter(part => part.trim());
+                        if (parts.length >= 5) {
+                            const key = `${parts[0]}_${parts[1]}_${parts[2]}_${parts[3]}_${parts[4]}`;
+                            existingCombinations.add(key);
+                        }
+                    });
+                }
+                
+                const lines = inputText.split('\n').filter(line => line.trim());
+                const values = [];
+                let duplicateCount = 0;
+                
+                lines.forEach(line => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine) return;
+                    
+                    const parts = trimmedLine.split(/\t+|\s{2,}/).filter(part => part.trim());
+                    if (parts.length < 5) {
+                        showSQLMessage(`数据格式错误，需要5个字段：ad_plan_id, adx, first_ssp, bundle, tagid`);
+                        return;
+                    }
+                    
+                    const [ad_plan_id, adx, first_ssp, bundle, tagid] = parts;
+                    const key = `${ad_plan_id}_${adx}_${first_ssp}_${bundle}_${tagid}`;
+                    
+                    if (existingCombinations.has(key)) {
+                        duplicateCount++;
+                        return;
+                    }
+                    
+                    values.push(`(${ad_plan_id}, '${admTemplateIds}', '${attr}', '${tagid}', '${bundle}', '${first_ssp}', '${adx}')`);
+                });
+                
+                if (values.length === 0) {
+                    if (duplicateCount > 0) {
+                        showSQLMessage(`所有 ${duplicateCount} 条记录都已存在，无需生成SQL`);
+                    } else {
+                        showSQLMessage('没有有效的数据行');
+                    }
+                    return;
+                }
+                
+                // 分割处理，每段最多5000条
+                const maxRecordsPerSegment = 5000;
+                const segments = [];
+                
+                for (let i = 0; i < values.length; i += maxRecordsPerSegment) {
+                    const segment = values.slice(i, i + maxRecordsPerSegment);
+                    const sql = `INSERT INTO \`ad_plan_use_explore_data\` (
+    \`ad_plan_id\`,
+    \`adm_template_ids\`,
+    \`attr\`,
+    \`tagid\`,
+    \`bundle\`,
+    \`first_ssp\`,
+    \`adx\`
+) VALUES
+${segment.join(',\n')}
+ON DUPLICATE KEY UPDATE
+    \`adm_template_ids\` = VALUES(\`adm_template_ids\`),
+    \`attr\` = VALUES(\`attr\`),
+    \`tagid\` = VALUES(\`tagid\`),
+    \`bundle\` = VALUES(\`bundle\`),
+    \`first_ssp\` = VALUES(\`first_ssp\`),
+    \`adx\` = VALUES(\`adx\`);`;
+                    segments.push(sql);
+                }
+                
+                let result;
+                if (segments.length === 1) {
+                    result = segments[0];
+                    hideSegmentDownloads();
+                } else {
+                    result = segments.map((segment, index) => 
+                        `-- 第${index + 1}段 (共${segments.length}段)\n${segment}`
+                    ).join('\n\n');
+                    currentSegments = segments;
+                    currentType = 'use_explore_data';
+                    showSegmentDownloads(segments.length);
+                }
+                
+                document.getElementById('sqlOutput').value = result;
+                
+                let message = segments.length > 1 
+                    ? `成功生成 ${values.length} 条记录，已分割为 ${segments.length} 段SQL！`
+                    : `成功生成 ${values.length} 条记录的use_explore_data SQL语句！`;
+                if (duplicateCount > 0) {
+                    message += ` (已排除 ${duplicateCount} 条重复记录)`;
+                }
+                showSQLMessage(message, 'success');
+                
+            } catch (error) {
+                showSQLMessage('生成失败: ' + error.message);
+            }
+        }
+
+        function generateUseExploreDataFullSQL() {
+            const inputText = document.getElementById('useExploreDataFullInput').value.trim();
+            const existingText = document.getElementById('existingDataFullInput').value.trim();
+            const attr = document.getElementById('attrFullInput').value.trim();
+            
+            if (!inputText) {
+                showSQLMessage('请输入维护信息');
+                return;
+            }
+            
+            if (!attr) {
+                showSQLMessage('请输入Attr值');
+                return;
+            }
+            
+            try {
+                // 解析已存在的组合
+                const existingCombinations = new Set();
+                if (existingText) {
+                    const existingLines = existingText.split('\n').filter(line => line.trim());
+                    existingLines.forEach(line => {
+                        const parts = line.trim().split(/\t+|\s{2,}/).filter(part => part.trim());
+                        if (parts.length >= 5) {
+                            const key = `${parts[0]}_${parts[1]}_${parts[2]}_${parts[3]}_${parts[4]}`;
+                            existingCombinations.add(key);
+                        }
+                    });
+                }
+                
+                const lines = inputText.split('\n').filter(line => line.trim());
+                const values = [];
+                let duplicateCount = 0;
+                
+                lines.forEach(line => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine) return;
+                    
+                    const parts = trimmedLine.split(/\t+|\s{2,}/).filter(part => part.trim());
+                    if (parts.length < 6) {
+                        showSQLMessage(`数据格式错误，需要6个字段：ad_plan_id, adx, first_ssp, bundle, tagid, adm`);
+                        return;
+                    }
+                    
+                    const [ad_plan_id, adx, first_ssp, bundle, tagid, adm] = parts;
+                    const key = `${ad_plan_id}_${adx}_${first_ssp}_${bundle}_${tagid}`;
+                    
+                    if (existingCombinations.has(key)) {
+                        duplicateCount++;
+                        return;
+                    }
+                    
+                    values.push(`(${ad_plan_id}, '${adm}', '${attr}', '${tagid}', '${bundle}', '${first_ssp}', '${adx}')`);
+                });
+                
+                if (values.length === 0) {
+                    if (duplicateCount > 0) {
+                        showSQLMessage(`所有 ${duplicateCount} 条记录都已存在，无需生成SQL`);
+                    } else {
+                        showSQLMessage('没有有效的数据行');
+                    }
+                    return;
+                }
+                
+                // 分割处理，每段最多5000条
+                const maxRecordsPerSegment = 5000;
+                const segments = [];
+                
+                for (let i = 0; i < values.length; i += maxRecordsPerSegment) {
+                    const segment = values.slice(i, i + maxRecordsPerSegment);
+                    const sql = `INSERT INTO \`ad_plan_use_explore_data\` (
+    \`ad_plan_id\`,
+    \`adm_template_ids\`,
+    \`attr\`,
+    \`tagid\`,
+    \`bundle\`,
+    \`first_ssp\`,
+    \`adx\`
+) VALUES
+${segment.join(',\n')}
+ON DUPLICATE KEY UPDATE
+    \`adm_template_ids\` = VALUES(\`adm_template_ids\`),
+    \`attr\` = VALUES(\`attr\`),
+    \`tagid\` = VALUES(\`tagid\`),
+    \`bundle\` = VALUES(\`bundle\`),
+    \`first_ssp\` = VALUES(\`first_ssp\`),
+    \`adx\` = VALUES(\`adx\`);`;
+                    segments.push(sql);
+                }
+                
+                let result;
+                if (segments.length === 1) {
+                    result = segments[0];
+                    hideSegmentDownloads();
+                } else {
+                    result = segments.map((segment, index) => 
+                        `-- 第${index + 1}段 (共${segments.length}段)\n${segment}`
+                    ).join('\n\n');
+                    currentSegments = segments;
+                    currentType = 'use_explore_data_full';
+                    showSegmentDownloads(segments.length);
+                }
+                
+                document.getElementById('sqlOutput').value = result;
+                
+                let message = segments.length > 1 
+                    ? `成功生成 ${values.length} 条记录，已分割为 ${segments.length} 段SQL！`
+                    : `成功生成 ${values.length} 条记录的use_explore_data_full SQL语句！`;
+                if (duplicateCount > 0) {
+                    message += ` (已排除 ${duplicateCount} 条重复记录)`;
+                }
+                showSQLMessage(message, 'success');
+                
+            } catch (error) {
+                showSQLMessage('生成失败: ' + error.message);
+            }
+        }
+
+        function generateAdmConfig8020SQL() {
+            const inputText = document.getElementById('admConfig8020Input').value.trim();
+            const attr = document.getElementById('attrAdmConfigInput').value.trim();
+            const existingDataText = document.getElementById('existingDataAdmConfigInput').value.trim();
+            
+            if (!inputText) {
+                showSQLMessage('请输入维护信息');
+                return;
+            }
+            
+            if (!attr) {
+                showSQLMessage('请输入Attr值');
+                return;
+            }
+            
+            try {
+                const existingCombinations = new Set();
+                if (existingDataText) {
+                    const existingLines = existingDataText.split('\n').filter(line => line.trim());
+                    existingLines.forEach(line => {
+                        const parts = line.trim().split(/\t+/).filter(part => part.trim());
+                        if (parts.length >= 5) {
+                            const [ad_plan_id, adx, first_ssp, bundle, tagid] = parts;
+                            existingCombinations.add(`${ad_plan_id}_${adx}_${first_ssp}_${bundle}_${tagid}`);
+                        }
+                    });
+                }
+                
+                const lines = inputText.split('\n').filter(line => line.trim());
+                const values = [];
+                let duplicateCount = 0;
+                
+                lines.forEach(line => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine) return;
+                    
+                    const parts = trimmedLine.split(/\t+/).filter(part => part.trim());
+                    if (parts.length < 7) {
+                        return;
+                    }
+                    
+                    const [ad_plan_id, adx, first_ssp, bundle, tagid, optimal_adm_template_id, adm] = parts;
+                    const key = `${ad_plan_id}_${adx}_${first_ssp}_${bundle}_${tagid}`;
+                    
+                    if (existingCombinations.has(key)) {
+                        duplicateCount++;
+                        return;
+                    }
+                    
+                    values.push(`(${ad_plan_id}, '${adm}', '${attr}', '${tagid}', '${bundle}', '${first_ssp}', '${adx}', '${optimal_adm_template_id}')`);
+                });
+                
+                if (values.length === 0) {
+                    if (duplicateCount > 0) {
+                        showSQLMessage(`所有 ${duplicateCount} 条记录都已存在，无需生成SQL`);
+                    } else {
+                        showSQLMessage('没有有效的数据行');
+                    }
+                    return;
+                }
+                
+                const maxRecordsPerSegment = 5000;
+                const segments = [];
+                
+                for (let i = 0; i < values.length; i += maxRecordsPerSegment) {
+                    const segment = values.slice(i, i + maxRecordsPerSegment);
+                    const sql = `INSERT INTO \`ad_plan_use_explore_data\` (
+    \`ad_plan_id\`,
+    \`adm_template_ids\`,
+    \`attr\`,
+    \`tagid\`,
+    \`bundle\`,
+    \`first_ssp\`,
+    \`adx\`,
+    \`optimal_adm_template_id\`
+) VALUES
+${segment.join(',\n')}
+ON DUPLICATE KEY UPDATE
+    \`adm_template_ids\` = VALUES(\`adm_template_ids\`),
+    \`attr\` = VALUES(\`attr\`),
+    \`tagid\` = VALUES(\`tagid\`),
+    \`bundle\` = VALUES(\`bundle\`),
+    \`first_ssp\` = VALUES(\`first_ssp\`),
+    \`adx\` = VALUES(\`adx\`),
+    \`optimal_adm_template_id\` = VALUES(\`optimal_adm_template_id\`);`;
+                    segments.push(sql);
+                }
+                
+                let result;
+                if (segments.length === 1) {
+                    result = segments[0];
+                    hideSegmentDownloads();
+                } else {
+                    result = segments.map((segment, index) => 
+                        `-- 第${index + 1}段 (共${segments.length}段)\n${segment}`
+                    ).join('\n\n');
+                    currentSegments = segments;
+                    currentType = 'adm_config_8020';
+                    showSegmentDownloads(segments.length);
+                }
+                
+                document.getElementById('sqlOutput').value = result;
+                
+                let message = segments.length > 1 
+                    ? `成功生成 ${values.length} 条记录，已分割为 ${segments.length} 段SQL！`
+                    : `成功生成 ${values.length} 条记录的adm配置(80%最佳&20%通投) SQL语句！`;
+                if (duplicateCount > 0) {
+                    message += ` (已排除 ${duplicateCount} 条重复记录)`;
+                }
+                showSQLMessage(message, 'success');
+                
+            } catch (error) {
+                showSQLMessage('生成失败: ' + error.message);
+            }
+        }
+
+        function generateBlockPlacementSQL() {
+            const inputText = document.getElementById('blockPlacementInput').value.trim();
+            
+            if (!inputText) {
+                showSQLMessage('请输入数据');
+                return;
+            }
+            
+            try {
+                const lines = inputText.split('\n').filter(line => line.trim());
+                const values = [];
+                
+                lines.forEach(line => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine) return;
+                    
+                    const parts = trimmedLine.split(/\t+|\s{2,}/).filter(part => part.trim());
+                    if (parts.length < 5) {
+                        showSQLMessage(`数据格式错误，需要5个字段：ad_plan_id, adx, first_ssp, bundle, placement`);
+                        return;
+                    }
+                    
+                    const [ad_plan_id, adx, first_ssp, bundle, placement] = parts;
+                    values.push(`(${ad_plan_id}, '${adx}', '${first_ssp}', '${bundle}', '${placement}', 'block_forever', NOW())`);
+                });
+                
+                if (values.length === 0) {
+                    showSQLMessage('没有有效的数据行');
+                    return;
+                }
+                
+                // 分割处理，每段最多5000条
+                const maxRecordsPerSegment = 5000;
+                const segments = [];
+                
+                for (let i = 0; i < values.length; i += maxRecordsPerSegment) {
+                    const segment = values.slice(i, i + maxRecordsPerSegment);
+                    const sql = `INSERT INTO ad_plan_block_placement
+(ad_plan_id, adx, first_ssp, bundle, placement, block_placement_type, date_created)
+VALUES
+${segment.join(',\n')};`;
+                    segments.push(sql);
+                }
+                
+                let result;
+                if (segments.length === 1) {
+                    result = segments[0];
+                    hideSegmentDownloads();
+                } else {
+                    result = segments.map((segment, index) => 
+                        `-- 第${index + 1}段 (共${segments.length}段)\n${segment}`
+                    ).join('\n\n');
+                    currentSegments = segments;
+                    currentType = 'block_placement';
+                    showSegmentDownloads(segments.length);
+                }
+                
+                document.getElementById('sqlOutput').value = result;
+                
+                const message = segments.length > 1 
+                    ? `成功生成 ${values.length} 条记录，已分割为 ${segments.length} 段SQL！`
+                    : `成功生成 ${values.length} 条记录的SQL语句！`;
+                showSQLMessage(message, 'success');
+                
+            } catch (error) {
+                showSQLMessage('生成失败: ' + error.message);
+            }
+        }
+
+        function clearSQLGenerator() {
+            document.getElementById('blockPlacementInput').value = '';
+            document.getElementById('quickConcatInput').value = '';
+            document.getElementById('useExploreDataInput').value = '';
+            document.getElementById('existingDataInput').value = '';
+            document.getElementById('admTemplateIdsInput').value = '';
+            document.getElementById('attrInput').value = '';
+            document.getElementById('useExploreDataFullInput').value = '';
+            document.getElementById('existingDataFullInput').value = '';
+            document.getElementById('attrFullInput').value = '';
+            document.getElementById('sqlOutput').value = '';
+            hideSegmentDownloads();
+            currentSegments = null;
+            currentType = null;
+        }
+
+        // 轻量级显示分段下载按钮
+        function showSegmentDownloads(segmentCount) {
+            const downloadsDiv = document.getElementById('segmentDownloads');
+            
+            let html = '<div style="margin-top: 10px; padding: 15px; background: #f8f9fa; border-radius: 6px;">';
+            html += '<h4 style="margin-bottom: 10px; color: #2c3e50;">分段下载</h4>';
+            html += '<div style="display: flex; flex-wrap: wrap; gap: 8px;">';
+            
+            for (let i = 0; i < segmentCount; i++) {
+                html += `<button class="btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="downloadSegment(${i})">下载第${i + 1}段</button>`;
+            }
+            
+            html += '</div></div>';
+            downloadsDiv.innerHTML = html;
+            downloadsDiv.style.display = 'block';
+        }
+
+        function hideSegmentDownloads() {
+            document.getElementById('segmentDownloads').style.display = 'none';
+        }
+
+        // 按需生成并下载单个段落
+        function downloadSegment(index) {
+            if (!currentSegments || index >= currentSegments.length) {
+                showSQLMessage('段落不存在');
+                return;
+            }
+            
+            const segment = currentSegments[index];
+            const timestamp = Date.now();
+            const filename = `${currentType}_segment_${index + 1}_${timestamp}.sql`;
+            
+            const blob = new Blob([segment], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showSQLMessage(`第${index + 1}段SQL文件下载成功！`, 'success');
+        }
+
+        function copySQLResult() {
+            const result = document.getElementById('sqlOutput').value;
+            
+            if (!result) {
+                showSQLMessage('请先生成SQL');
+                return;
+            }
+            
+            navigator.clipboard.writeText(result).then(() => {
+                showSQLMessage('SQL已复制到剪贴板！', 'success');
+            }).catch(() => {
+                showSQLMessage('复制失败，请手动选择复制');
+            });
+        }
+
+        function downloadSQLFile() {
+            const result = document.getElementById('sqlOutput').value;
+            
+            if (!result) {
+                showSQLMessage('请先生成SQL');
+                return;
+            }
+            
+            const blob = new Blob([result], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sql_${Date.now()}.sql`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showSQLMessage('SQL文件下载成功！', 'success');
         }
     </script>
 </body>
